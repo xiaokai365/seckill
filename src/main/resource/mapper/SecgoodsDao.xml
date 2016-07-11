@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.snail.sec.dao.SecgoodsDao">
+
+	<update id="reducenumber">
+			update 
+				secgoods
+			set number=number-1
+			where secgoodid=#{secgoodsid}
+			and number>0
+			and starttime  &lt;  #{killTime}
+			and endtime &gt;  #{killTime}
+	</update>
+
+	<select id="queryById" parameterType="long" resultType="Secgoods">
+		select * from secgoods where secgoodid=#{secgoodsid}
+	</select>
+	
+	<select id="queryall"  resultType="Secgoods">
+		select * from secgoods  limit #{offet} ,#{limit}
+	</select>
+
+</mapper>

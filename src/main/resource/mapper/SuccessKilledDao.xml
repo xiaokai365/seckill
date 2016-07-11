@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace必须指向Dao接口 -->
+<mapper namespace="com.snail.sec.dao.SuccessKilledDao">
+	<insert id="insertSuccess">
+		<!-- 主键重复，插入出错的时候，返回0 -->
+		insert ignore into 
+			success_killed(secgoodid,userphone)
+		values(#{secGoodsid},#{userphone})
+	</insert>
+
+	<select id="querySuccessWithSecGoods"  resultType="SuccessKilled">
+		select 
+				k.*,
+		s.createtime "secgoods.createtime",
+		s.endtime "secgoods.endtime",
+		s.`name` "secgoods.name",
+		s.number "secgoods.number",
+		s.secgoodid "secgoods.secgoodid",
+		s.starttime "secgoods.starttime"
+		from  success_killed k
+		LEFT OUTER JOIN secgoods s on k.secgoodid=s.secgoodid
+		where s.secgoodid  =#{secGoodsid} and k.userphone=#{userphone}
+	</select>
+
+</mapper>
