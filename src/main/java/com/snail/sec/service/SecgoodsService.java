@@ -5,6 +5,9 @@ import java.util.List;
 import com.snail.sec.dto.SecKillInfo;
 import com.snail.sec.dto.SecKillResult;
 import com.snail.sec.entity.Secgoods;
+import com.snail.sec.exception.RepeatSecKillException;
+import com.snail.sec.exception.SecKillCloseException;
+import com.snail.sec.exception.SecKillInfoModifyedException;
 
 /**
  * 秒杀service
@@ -24,6 +27,6 @@ public interface SecgoodsService {
 	SecKillInfo     exportSecKillUrl(long secgoodid);
 	
 	//执行秒杀
-	SecKillResult executeSecKill(long secgoodid,String userphone,String md5);
+	SecKillResult executeSecKill(long secgoodid,String userphone,String md5) throws SecKillInfoModifyedException,RepeatSecKillException,SecKillCloseException,Exception;
 	
 }

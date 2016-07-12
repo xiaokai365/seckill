@@ -24,9 +24,9 @@ import com.snail.sec.service.SecgoodsService;
 
 @Service
 public class SecgoodsServiceImpl implements SecgoodsService {
-	
-	private final Logger  logger=LoggerFactory.getLogger(this.getClass());
-	
+
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	@Autowired
 	private SecgoodsDao secgoodsDao;
 	@Autowired
@@ -69,9 +69,12 @@ public class SecgoodsServiceImpl implements SecgoodsService {
 	@Override
 	/**
 	 * 执行秒杀
+	 * 抛出运行期异常 以便spring事物管理器捕获，
+	 * 捕获到运行期异常  rollback
 	 */
 	@Transactional
-	public SecKillResult executeSecKill(long secgoodid, String userphone, String md5) {
+	public SecKillResult executeSecKill(long secgoodid, String userphone, String md5)
+			throws SecKillInfoModifyedException, RepeatSecKillException, SecKillCloseException, Exception {
 		Secgoods secgood = secgoodsDao.queryById(secgoodid);
 		if (secgood == null || !getMd5(secgoodid).equals(md5)) {
 			logger.info("", "秒杀信息被篡改异常");
@@ -82,17 +85,19 @@ public class SecgoodsServiceImpl implements SecgoodsService {
 		if (updatecount <= 0) {
 			// 减库存失败
 			throw new SecKillCloseException("秒杀已经关闭");
-		}else{
-			//减库存成功  执行插入记录
-			int insertcont=successKilledDao.insertSuccess(secgoodid, userphone);
-			if(insertcont<=0){
-				//重复秒杀或者秒杀失败
+		} else {
+			// 减库存成功 执行插入记录
+			int insertcont = successKilledDao.insertSuccess(secgoodid, userphone);
+			if (insertcont <= 0) {
+				// 重复秒杀或者秒杀失败
 				throw new RepeatSecKillException("重复秒杀");
-			}else{
-				//秒杀成功
-				SuccessKilled  successKilled=successKilledDao.querySuccessWithSecGoods(secgoodid, userphone);
-				return new SecKillResult(secgoodid, CommonConstant.SUCCESS_CODE, CommonConstant.SUCCESS_INFO, successKilled);
+			} else {
+				// 秒杀成功
+				SuccessKilled successKilled = successKilledDao.querySuccessWithSecGoods(secgoodid, userphone);
+				return new SecKillResult(secgoodid, CommonConstant.SUCCESS_CODE, CommonConstant.SUCCESS_INFO,
+						successKilled);
 			}
 		}
 	}
+
 }
