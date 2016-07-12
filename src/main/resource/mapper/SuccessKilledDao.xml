@@ -6,8 +6,8 @@
 	<insert id="insertSuccess">
 		<!-- 主键重复，插入出错的时候，返回0 -->
 		insert ignore into 
-			success_killed(secgoodid,userphone)
-		values(#{secGoodsid},#{userphone})
+			success_killed(secgoodid,userphone,createtime)
+		values(#{secGoodsid},#{userphone},now())
 	</insert>
 
 	<select id="querySuccessWithSecGoods"  resultType="SuccessKilled">
