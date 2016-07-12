@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -16,13 +18,16 @@ import com.snail.sec.entity.Secgoods;
 @ContextConfiguration({"classpath:spring-dao.xml"
 		,"classpath:spring-service.xml"})
 public class SecgoodsServiceTest {
-
+	
+	private final Logger  logger=LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private SecgoodsService  secgoodsService;
 	
 	@Test
 	public void queryall(){
 		List<Secgoods>  list= secgoodsService.queryall();
+		logger.info("list={}", list);
 		System.out.println(list);
 	}
 	

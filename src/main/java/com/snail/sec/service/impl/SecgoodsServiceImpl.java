@@ -3,6 +3,8 @@ package com.snail.sec.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,9 @@ import com.snail.sec.service.SecgoodsService;
 
 @Service
 public class SecgoodsServiceImpl implements SecgoodsService {
-
+	
+	private final Logger  logger=LoggerFactory.getLogger(this.getClass());
+	
 	@Autowired
 	private SecgoodsDao secgoodsDao;
 	@Autowired
@@ -70,6 +74,7 @@ public class SecgoodsServiceImpl implements SecgoodsService {
 	public SecKillResult executeSecKill(long secgoodid, String userphone, String md5) {
 		Secgoods secgood = secgoodsDao.queryById(secgoodid);
 		if (secgood == null || !getMd5(secgoodid).equals(md5)) {
+			logger.info("", "秒杀信息被篡改异常");
 			throw new SecKillInfoModifyedException("秒杀信息被篡改异常");
 		}
 		// 执行秒杀逻辑减库存增加记录
