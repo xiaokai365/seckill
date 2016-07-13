@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.snail.sec.dto.BaseResponse;
 import com.snail.sec.dto.SecKillInfo;
@@ -50,6 +51,7 @@ public class SecKillController {
 
 	@RequestMapping(value = "/{secgoodsid}/exposer", produces = {
 			"application/json;charset=UTF-8" }, method = RequestMethod.POST)
+	@ResponseBody
 	public BaseResponse<SecKillInfo> exposer(@PathVariable("secgoodsid") Long secgoodsid) {
 		if (secgoodsid == null) {
 			return new BaseResponse<>(false, "秒杀错误");
@@ -63,6 +65,7 @@ public class SecKillController {
 
 	@RequestMapping(value = "/{secgoodsid}/{md5}/execute", produces = {
 			"application/json;charset=UTF-8" }, method = RequestMethod.POST)
+	@ResponseBody
 	public BaseResponse<SecKillResult> execute(@PathVariable("secgoodsid") Long secgoodsid,
 			@PathVariable("md5") String md5, @CookieValue(value = "userphone", required = false) String userphone) {
 		if (secgoodsid == null || md5 == null) {
