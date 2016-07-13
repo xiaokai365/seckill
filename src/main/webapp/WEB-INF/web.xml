@@ -5,4 +5,18 @@
 	version="3.0" metadata-complete="true">
 	<!-- maven创建的项目默认是web-app 2.3版本，该版本不支持el表达式 -->
 
+	<servlet>
+			<servlet-name>DispatcherServlet</servlet-name>
+			<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+			<init-param>
+					<param-name>contextConfigLocation</param-name>		
+					<param-value>classpath:spring-*.xml</param-value>		
+			</init-param>
+	</servlet>
+	<servlet-mapping>
+				<servlet-name>DispatcherServlet</servlet-name>
+				<!-- 默认匹配所以的请求restful风格  -->
+				<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
 </web-app> 
