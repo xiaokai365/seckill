@@ -13,6 +13,7 @@ import org.springframework.util.DigestUtils;
 import com.snail.sec.constant.CommonConstant;
 import com.snail.sec.dao.SecgoodsDao;
 import com.snail.sec.dao.SuccessKilledDao;
+import com.snail.sec.dao.redis.RedisSecgoodsDao;
 import com.snail.sec.dto.SecKillInfo;
 import com.snail.sec.dto.SecKillResult;
 import com.snail.sec.entity.Secgoods;
@@ -31,6 +32,8 @@ public class SecgoodsServiceImpl implements SecgoodsService {
 	private SecgoodsDao secgoodsDao;
 	@Autowired
 	private SuccessKilledDao successKilledDao;
+	@Autowired
+	private RedisSecgoodsDao   redisSecgoodsDao;
 
 	private final String secret = "sdjfdkjs76s8*9809ds??><";
 
@@ -52,9 +55,14 @@ public class SecgoodsServiceImpl implements SecgoodsService {
 		/**
 		 *优化点 加入redis后端缓存
 		 */
-		Secgoods secgood = secgoodsDao.queryById(secgoodid);
+		Secgoods secgood =redisSecgoodsDao.getSecgoods(secgoodid);
+		//Secgoods secgood = secgoodsDao.queryById(secgoodid);
 		if (secgood == null) {
-			return new SecKillInfo(false, secgoodid);// 没有该秒杀物品
+			 secgood = secgoodsDao.queryById(secgoodid);
+			 if(secgood==null){
+				 return new SecKillInfo(false, secgoodid);// 没有该秒杀物品
+			 }
+			 String   result=redisSecgoodsDao.setSecgoods(secgood);
 		}
 		Date start = secgood.getStarttime();
 		Date end = secgood.getEndtime();
