@@ -44,8 +44,14 @@ public class SecgoodsServiceImpl implements SecgoodsService {
 		return secgoodsDao.queryById(secgoodsid);
 	}
 
+	/**
+	 * 暴露秒杀接口
+	 */
 	@Override
 	public SecKillInfo exportSecKillUrl(long secgoodid) {
+		/**
+		 *优化点 加入redis后端缓存
+		 */
 		Secgoods secgood = secgoodsDao.queryById(secgoodid);
 		if (secgood == null) {
 			return new SecKillInfo(false, secgoodid);// 没有该秒杀物品

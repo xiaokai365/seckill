@@ -49,5 +49,9 @@
 		<property name="basePackage" value="com.snail.sec.dao" />
 	</bean>
 
+	<bean class="com.snail.sec.dao.redis.RedisSecgoodsDao">
+		<constructor-arg index="0" value="192.168.186.135"/>
+        <constructor-arg index="1" value="6379"/>
+	</bean>
 
 </beans>
